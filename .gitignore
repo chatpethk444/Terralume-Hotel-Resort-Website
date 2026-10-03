@@ -1,0 +1,15 @@
+# dependencies
+node_modules/
+.next/
+out/
+
+# env
+.env*.local
+
+# local audit artifacts
+lh-*.json
+server*.log
+
+# OS
+.DS_Store
+Thumbs.db

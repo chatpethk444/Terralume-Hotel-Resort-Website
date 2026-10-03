@@ -1,0 +1,147 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --sand: #e5c89f;
+  --terracotta: #c37956;
+  --olive: #be9244;
+  --bark: #654433;
+  --sage: #7a847c;
+  --ink: #3c3835;
+  --cream: #f6f4ee;
+  /* Motion tokens — strong custom easings, never bare ease */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--cream);
+}
+
+/* Browser surfaces carry the design too */
+::selection {
+  background: var(--bark);
+  color: var(--cream);
+}
+:focus-visible {
+  outline: 2px solid var(--terracotta);
+  outline-offset: 3px;
+}
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--cream);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--sand);
+  border: 2px solid var(--cream);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--terracotta);
+}
+
+/* Pressable elements push back — tactile feedback */
+@media (hover: hover) and (pointer: fine) {
+  button:active,
+  a:active {
+    scale: 0.98;
+  }
+}
+
+/* Scroll reveal — soft fade-up per Flow A */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.9s var(--ease-out),
+    transform 0.9s var(--ease-out);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Clip-path image reveal — curtain lift for photography */
+.reveal-clip {
+  opacity: 0;
+  clip-path: inset(0 0 100% 0);
+  transition:
+    opacity 0.7s var(--ease-out),
+    clip-path 1.1s var(--ease-out);
+}
+.reveal-clip.is-visible {
+  opacity: 1;
+  clip-path: inset(0 0 0 0);
+}
+
+/* Hero crossfade */
+.hero-slide {
+  transition: opacity 1.6s ease;
+}
+
+/* One authored motion moment: slow Ken Burns drift on the active slide */
+@keyframes kenburns {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.07);
+  }
+}
+.kenburns {
+  animation: kenburns 8s var(--ease-out) forwards;
+}
+
+/* Modal entrance — rise + settle, never from nothing */
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.modal-panel {
+  animation: modal-in 320ms var(--ease-out);
+}
+
+/* Success confirmation — gentle pop */
+@keyframes pop-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.pop-in {
+  animation: pop-in 360ms var(--ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal,
+  .reveal-clip {
+    opacity: 1;
+    transform: none;
+    clip-path: none;
+    transition: none;
+  }
+  .kenburns,
+  .modal-panel,
+  .pop-in {
+    animation: none;
+  }
+}
