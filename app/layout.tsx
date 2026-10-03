@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Playfair_Display, Montserrat } from "next/font/google";
+import { Playfair_Display, Montserrat, Noto_Serif_Thai, Prompt } from "next/font/google";
 import "./globals.css";
 
 const display = Playfair_Display({
@@ -13,6 +13,22 @@ const body = Montserrat({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600"],
   variable: "--font-body",
+  display: "swap",
+});
+
+// Thai companions — clean serif display + geometric sans body,
+// mirroring the Playfair / Montserrat pairing
+const displayTh = Noto_Serif_Thai({
+  subsets: ["latin", "thai"],
+  weight: ["400", "500", "600"],
+  variable: "--font-display-th",
+  display: "swap",
+});
+
+const bodyTh = Prompt({
+  subsets: ["latin", "thai"],
+  weight: ["300", "400", "500", "600"],
+  variable: "--font-body-th",
   display: "swap",
 });
 
@@ -59,7 +75,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${display.variable} ${body.variable}`}>
+    <html
+      lang="en"
+      className={`${display.variable} ${body.variable} ${displayTh.variable} ${bodyTh.variable}`}
+    >
       <head>
         <script
           type="application/ld+json"

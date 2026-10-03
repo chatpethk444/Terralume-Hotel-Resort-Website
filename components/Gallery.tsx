@@ -1,21 +1,23 @@
 import Image from "next/image";
+import { STR, type Lang } from "../data/i18n";
 import Reveal from "./Reveal";
 
-export default function Gallery() {
+export default function Gallery({ lang }: { lang: Lang }) {
+  const t = STR[lang];
   return (
     <section id="gallery" className="scroll-mt-20 bg-cream py-20 md:py-28">
       <div className="mx-auto max-w-7xl px-5 md:px-8">
         <Reveal className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="text-[12px] font-medium uppercase tracking-eyebrow text-terracotta">
-              Gallery
+              {t.gallery.eyebrow}
             </p>
             <h2 className="mt-3 font-display text-[28px] font-medium text-stone md:text-[36px]">
-              Atmosphere in Frames
+              {t.gallery.title}
             </h2>
           </div>
           <p className="text-[11px] font-medium uppercase tracking-eyebrow text-sage">
-            Natural / Authentic / Refined / Timeless
+            {t.gallery.keywords}
           </p>
         </Reveal>
 
@@ -59,10 +61,10 @@ export default function Gallery() {
           <Reveal delay={240} className="col-span-2 md:col-span-1">
             <div className="flex aspect-[2/1] w-full flex-col justify-between bg-bark p-6 md:aspect-square md:p-7">
               <p className="font-display text-lg italic leading-snug text-cream md:text-2xl">
-                &ldquo;Stay closer to what matters&rdquo;
+                {t.gallery.quote}
               </p>
               <p className="text-[11px] font-medium uppercase tracking-eyebrow text-sand">
-                Terralume mood
+                {t.gallery.mood}
               </p>
             </div>
           </Reveal>

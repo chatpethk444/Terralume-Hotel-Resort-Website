@@ -14,8 +14,18 @@ const config: Config = {
         cream: "#F6F4EE",
       },
       fontFamily: {
-        display: ["var(--font-display)", "Georgia", "serif"],
-        body: ["var(--font-body)", "'Segoe UI'", "sans-serif"],
+        display: [
+          "var(--font-display)",
+          "var(--font-display-th)",
+          "Georgia",
+          "serif",
+        ],
+        body: [
+          "var(--font-body)",
+          "var(--font-body-th)",
+          "'Segoe UI'",
+          "sans-serif",
+        ],
       },
       letterSpacing: {
         eyebrow: "0.2em",

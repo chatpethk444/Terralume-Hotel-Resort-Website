@@ -2,12 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { X, Minus, Plus, CheckCircle2 } from "lucide-react";
-
-const ROOMS = [
-  "Deluxe Sea View Room",
-  "Terrace Pool Suite",
-  "Garden Pavilion Room",
-];
+import { ROOMS } from "../data/content";
+import { STR, type Lang } from "../data/i18n";
 
 type Errors = Partial<
   Record<"checkIn" | "checkOut" | "name" | "email" | "phone", string>
@@ -24,12 +20,15 @@ export default function BookingModal({
   open,
   onClose,
   initialRoom,
+  lang,
 }: {
   open: boolean;
   onClose: () => void;
   initialRoom?: string;
+  lang: Lang;
 }) {
-  const [room, setRoom] = useState(ROOMS[0]);
+  const t = STR[lang];
+  const [room, setRoom] = useState(ROOMS[0].name);
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [adults, setAdults] = useState(2);
@@ -45,7 +44,12 @@ export default function BookingModal({
     if (!open) return;
     setRef(null);
     setErrors({});
-    if (initialRoom && ROOMS.includes(initialRoom)) setRoom(initialRoom);
+    if (initialRoom && ROOMS.some((r) => r.name === initialRoom))
+      setRoom(initialRoom);
+  }, [open, initialRoom]);
+
+  useEffect(() => {
+    if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     document.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
@@ -65,13 +69,13 @@ export default function BookingModal({
 
   const submit = () => {
     const e: Errors = {};
-    if (!checkIn) e.checkIn = "Select a check-in date";
-    if (!checkOut) e.checkOut = "Select a check-out date";
-    else if (nights <= 0) e.checkOut = "Check-out must be after check-in";
-    if (!name.trim()) e.name = "Please enter your name";
+    if (!checkIn) e.checkIn = t.booking.errIn;
+    if (!checkOut) e.checkOut = t.booking.errOut;
+    else if (nights <= 0) e.checkOut = t.booking.errOrder;
+    if (!name.trim()) e.name = t.booking.errName;
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()))
-      e.email = "Enter a valid email";
-    if (!phone.trim()) e.phone = "Please enter a phone number";
+      e.email = t.booking.errEmail;
+    if (!phone.trim()) e.phone = t.booking.errPhone;
     setErrors(e);
     if (Object.keys(e).length === 0) setRef(makeRef());
   };
@@ -98,7 +102,7 @@ export default function BookingModal({
         >
           <Minus className="h-4 w-4" strokeWidth={1.5} />
         </button>
-        <span className="w-5 text-center text-sm font-semibold text-stone">
+        <span className="w-5 text-center text-sm font-semibold tabular-nums text-stone">
           {value}
         </span>
         <button
@@ -114,13 +118,17 @@ export default function BookingModal({
     </div>
   );
 
+  const nightWord = nights > 1 ? t.booking.nights : t.booking.night;
+  const guestWord =
+    adults + children > 1 ? t.booking.guests : t.booking.guest;
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-end justify-center bg-stone/60 backdrop-blur-[2px] sm:items-center sm:p-6"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
-      aria-label="Quick booking"
+      aria-label={t.booking.quick}
     >
       <div
         className="modal-panel max-h-[92svh] w-full max-w-lg overflow-y-auto bg-cream"
@@ -129,15 +137,15 @@ export default function BookingModal({
         <div className="flex items-center justify-between border-b border-sand/60 px-6 py-4">
           <div>
             <p className="text-[11px] font-medium uppercase tracking-eyebrow text-terracotta">
-              Quick booking
+              {t.booking.quick}
             </p>
             <h3 className="font-display text-xl font-medium text-stone">
-              {ref ? "Request received" : "Plan your escape"}
+              {ref ? t.booking.received : t.booking.planTitle}
             </h3>
           </div>
           <button
             onClick={onClose}
-            aria-label="Close booking"
+            aria-label={t.booking.closeBooking}
             className="p-1.5 text-stone transition-colors hover:text-terracotta"
           >
             <X className="h-5 w-5" strokeWidth={1.5} />
@@ -152,13 +160,16 @@ export default function BookingModal({
               strokeWidth={1.25}
             />
             <p className="mt-4 font-display text-2xl text-stone">
-              Thank you, {name.split(" ")[0]}.
+              {t.booking.thanks(name.split(" ")[0])}
             </p>
             <p className="mx-auto mt-2 max-w-sm text-sm font-light leading-relaxed text-stone/75">
-              Your booking request for the {room} from {checkIn} to {checkOut}{" "}
-              ({nights} night{nights > 1 ? "s" : ""},{" "}
-              {adults + children} guest{adults + children > 1 ? "s" : ""}) is
-              with us. We&rsquo;ll confirm by email shortly.
+              {t.booking.summary(
+                room,
+                checkIn,
+                checkOut,
+                nights,
+                adults + children
+              )}
             </p>
             <p className="mx-auto mt-5 w-fit border border-dashed border-terracotta/60 bg-white/60 px-6 py-3 text-sm font-semibold tracking-[0.15em] text-bark">
               {ref}
@@ -167,14 +178,14 @@ export default function BookingModal({
               onClick={onClose}
               className="mt-6 w-full bg-bark py-3.5 text-[13px] font-semibold tracking-[0.05em] text-cream transition-colors hover:bg-terracotta"
             >
-              Done
+              {t.booking.done}
             </button>
           </div>
         ) : (
           <div className="space-y-4 px-6 py-6">
             <div>
               <label htmlFor="bk-room" className="mb-1.5 block text-[12px] font-medium uppercase tracking-[0.12em] text-stone/70">
-                Room
+                {t.booking.room}
               </label>
               <select
                 id="bk-room"
@@ -183,7 +194,9 @@ export default function BookingModal({
                 className={inputCls}
               >
                 {ROOMS.map((r) => (
-                  <option key={r}>{r}</option>
+                  <option key={r.slug} value={r.name}>
+                    {r.name}
+                  </option>
                 ))}
               </select>
             </div>
@@ -191,7 +204,7 @@ export default function BookingModal({
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label htmlFor="bk-in" className="mb-1.5 block text-[12px] font-medium uppercase tracking-[0.12em] text-stone/70">
-                  Check-in
+                  {t.booking.checkIn}
                 </label>
                 <input
                   id="bk-in"
@@ -206,7 +219,7 @@ export default function BookingModal({
               </div>
               <div>
                 <label htmlFor="bk-out" className="mb-1.5 block text-[12px] font-medium uppercase tracking-[0.12em] text-stone/70">
-                  Check-out
+                  {t.booking.checkOut}
                 </label>
                 <input
                   id="bk-out"
@@ -223,19 +236,19 @@ export default function BookingModal({
             </div>
 
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              {stepper("Adults", adults, setAdults, 1, 6)}
-              {stepper("Children", children, setChildren, 0, 4)}
+              {stepper(t.booking.adults, adults, setAdults, 1, 6)}
+              {stepper(t.booking.children, children, setChildren, 0, 4)}
             </div>
 
             <div>
               <label htmlFor="bk-name" className="mb-1.5 block text-[12px] font-medium uppercase tracking-[0.12em] text-stone/70">
-                Full name
+                {t.booking.fullName}
               </label>
               <input
                 id="bk-name"
                 type="text"
                 autoComplete="name"
-                placeholder="Alexandra Meer"
+                placeholder={t.booking.namePh}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className={inputCls}
@@ -248,7 +261,7 @@ export default function BookingModal({
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div>
                 <label htmlFor="bk-email" className="mb-1.5 block text-[12px] font-medium uppercase tracking-[0.12em] text-stone/70">
-                  Email
+                  {t.booking.email}
                 </label>
                 <input
                   id="bk-email"
@@ -265,7 +278,7 @@ export default function BookingModal({
               </div>
               <div>
                 <label htmlFor="bk-phone" className="mb-1.5 block text-[12px] font-medium uppercase tracking-[0.12em] text-stone/70">
-                  Phone
+                  {t.booking.phone}
                 </label>
                 <input
                   id="bk-phone"
@@ -284,8 +297,7 @@ export default function BookingModal({
 
             {nights > 0 && (
               <p className="border border-sand/60 bg-white/50 px-4 py-2.5 text-center text-[13px] font-medium text-stone">
-                {nights} night{nights > 1 ? "s" : ""} · {adults + children}{" "}
-                guest{adults + children > 1 ? "s" : ""} · {room}
+                {nights} {nightWord} · {adults + children} {guestWord} · {room}
               </p>
             )}
 
@@ -293,10 +305,10 @@ export default function BookingModal({
               onClick={submit}
               className="w-full bg-bark py-3.5 text-[13px] font-semibold tracking-[0.05em] text-cream transition-colors hover:bg-terracotta"
             >
-              Confirm Booking Request
+              {t.booking.confirm}
             </button>
             <p className="text-center text-[11px] font-light text-stone/50">
-              No payment today — we confirm availability by email first.
+              {t.booking.note}
             </p>
           </div>
         )}

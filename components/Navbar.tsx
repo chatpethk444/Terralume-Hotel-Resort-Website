@@ -2,17 +2,27 @@
 
 import { useEffect, useState } from "react";
 import { Menu, X, Mountain } from "lucide-react";
+import { STR, type Lang } from "../data/i18n";
 
-const LINKS = [
-  { label: "Home", href: "#home" },
-  { label: "Rooms", href: "#rooms" },
-  { label: "Experiences", href: "#experiences" },
-  { label: "Gallery", href: "#gallery" },
-];
-
-export default function Navbar({ onBook }: { onBook: () => void }) {
+export default function Navbar({
+  onBook,
+  lang,
+  onLang,
+}: {
+  onBook: () => void;
+  lang: Lang;
+  onLang: (l: Lang) => void;
+}) {
+  const t = STR[lang];
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+
+  const LINKS = [
+    { label: t.nav.home, href: "#home" },
+    { label: t.nav.rooms, href: "#rooms" },
+    { label: t.nav.experiences, href: "#experiences" },
+    { label: t.nav.gallery, href: "#gallery" },
+  ];
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -30,6 +40,31 @@ export default function Navbar({ onBook }: { onBook: () => void }) {
   }, [open ]);
 
   const solid = scrolled || open;
+
+  const toggle = (mobile: boolean) => (
+    <div
+      className={`flex items-center text-[12px] font-semibold tracking-[0.08em] ${
+        mobile ? "gap-3" : "gap-1.5"
+      } ${solid || mobile ? "text-stone" : "text-cream"}`}
+      role="group"
+      aria-label="Language"
+    >
+      {(["en", "th"] as Lang[]).map((l, i) => (
+        <span key={l} className="flex items-center gap-1.5">
+          {i > 0 && <span className="opacity-40">/</span>}
+          <button
+            onClick={() => onLang(l)}
+            aria-pressed={lang === l}
+            className={`uppercase transition-opacity ${
+              lang === l ? "opacity-100" : "opacity-50 hover:opacity-80"
+            }`}
+          >
+            {l === "en" ? "EN" : "ไทย"}
+          </button>
+        </span>
+      ))}
+    </div>
+  );
 
   return (
     <>
@@ -85,17 +120,18 @@ export default function Navbar({ onBook }: { onBook: () => void }) {
             ))}
           </ul>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
+            <span className="hidden md:block">{toggle(false)}</span>
             <button
               onClick={onBook}
               className="hidden bg-bark px-6 py-2.5 text-[13px] font-semibold tracking-[0.05em] text-cream transition-colors hover:bg-terracotta md:block"
             >
-              Book Now
+              {t.nav.book}
             </button>
             {/* Mobile hamburger */}
             <button
               onClick={() => setOpen(!open)}
-              aria-label={open ? "Close menu" : "Open menu"}
+              aria-label={open ? t.nav.closeMenu : t.nav.openMenu}
               className={`p-1 md:hidden ${
                 solid ? "text-stone" : "text-cream"
               }`}
@@ -130,9 +166,12 @@ export default function Navbar({ onBook }: { onBook: () => void }) {
               {l.label}
             </a>
           ))}
-          <p className="pt-6 text-[11px] font-medium uppercase tracking-eyebrow text-sage">
-            A place to slow down
-          </p>
+          <div className="flex items-center justify-between pt-6">
+            <p className="text-[11px] font-medium uppercase tracking-eyebrow text-sage">
+              {t.nav.tagline}
+            </p>
+            {toggle(true)}
+          </div>
         </div>
         <div className="p-5">
           <button
@@ -142,7 +181,7 @@ export default function Navbar({ onBook }: { onBook: () => void }) {
             }}
             className="w-full bg-bark py-4 text-sm font-semibold tracking-[0.05em] text-cream transition-colors hover:bg-terracotta"
           >
-            Book Now
+            {t.nav.book}
           </button>
         </div>
       </div>

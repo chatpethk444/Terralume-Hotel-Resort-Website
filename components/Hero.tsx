@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
+import { STR, type Lang } from "../data/i18n";
 
 const SLIDES = [
   {
@@ -21,7 +22,8 @@ const SLIDES = [
   },
 ];
 
-export default function Hero() {
+export default function Hero({ lang }: { lang: Lang }) {
+  const t = STR[lang];
   const [active, setActive] = useState(0);
   const [visited, setVisited] = useState<Set<number>>(() => new Set([0]));
 
@@ -35,14 +37,14 @@ export default function Hero() {
   );
 
   useEffect(() => {
-    const t = setInterval(() => {
+    const timer = setInterval(() => {
       setActive((a) => {
         const n = (a + 1) % SLIDES.length;
         setVisited((v) => new Set(v).add(n));
         return n;
       });
     }, 7000);
-    return () => clearInterval(t);
+    return () => clearInterval(timer);
   }, []);
 
   return (
@@ -102,22 +104,21 @@ export default function Hero() {
       <div className="relative z-10 mx-auto w-full max-w-7xl px-5 pt-24 md:px-8">
         <div className="max-w-xl">
           <p className="text-[12px] font-medium uppercase tracking-eyebrow text-sand">
-            A place to slow down
+            {t.hero.eyebrow}
           </p>
           <h1 className="mt-4 font-display text-[36px] font-medium leading-[1.12] text-cream md:text-[56px]">
-            Nature&rsquo;s Beauty,
+            {t.hero.titleA}
             <br />
-            Your Perfect Stay
+            {t.hero.titleB}
           </h1>
           <p className="mt-5 max-w-md text-[15px] font-light leading-relaxed text-cream/85 md:text-base">
-            Terralume Hotel &amp; Resort offers a serene escape where natural
-            beauty meets thoughtful comfort.
+            {t.hero.sub}
           </p>
           <a
             href="#rooms"
             className="mt-8 inline-block bg-bark px-8 py-3.5 text-[13px] font-semibold tracking-[0.05em] text-cream transition-colors hover:bg-terracotta"
           >
-            Explore Our Rooms
+            {t.hero.cta}
           </a>
         </div>
 

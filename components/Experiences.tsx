@@ -12,6 +12,7 @@ import {
   Check,
 } from "lucide-react";
 import { EXPERIENCES, WISHLIST_KEY, type Experience } from "../data/content";
+import { STR, type Lang } from "../data/i18n";
 import Reveal from "./Reveal";
 
 const ICONS: Record<string, typeof Flower2> = {
@@ -31,15 +32,28 @@ function loadWishlist(): string[] {
 
 export default function Experiences({
   onReserve,
+  lang,
 }: {
   onReserve: () => void;
+  lang: Lang;
 }) {
+  const t = STR[lang];
   const [wishlist, setWishlist] = useState<string[]>([]);
   const [selected, setSelected] = useState<Experience | null>(null);
 
   useEffect(() => {
     setWishlist(loadWishlist());
   }, []);
+
+  // Lock background scroll while the program modal is open
+  useEffect(() => {
+    document.body.style.overflow = selected ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [selected]);
+
+  const text = (exp: Experience) => (lang === "th" ? exp.th : exp);
 
   const toggle = (id: string) => {
     setWishlist((prev) => {
@@ -60,15 +74,13 @@ export default function Experiences({
       <div className="mx-auto max-w-7xl px-5 md:px-8">
         <Reveal className="mx-auto max-w-2xl text-center">
           <p className="text-[12px] font-medium uppercase tracking-eyebrow text-terracotta">
-            Experiences
+            {t.experiences.eyebrow}
           </p>
           <h2 className="mt-3 font-display text-[28px] font-medium text-stone md:text-[36px]">
-            More Than a Stay
+            {t.experiences.title}
           </h2>
           <p className="mt-4 text-[15px] font-light leading-relaxed text-stone/80">
-            From sunrise yoga to local culinary journeys, our experiences are
-            designed to help you reconnect — with nature, with others, and
-            with yourself.
+            {t.experiences.intro}
           </p>
           {wishlist.length > 0 && (
             <p className="mt-3 inline-flex items-center gap-1.5 text-[12px] font-medium uppercase tracking-[0.12em] text-terracotta">
@@ -76,7 +88,7 @@ export default function Experiences({
                 className="h-3.5 w-3.5 fill-terracotta"
                 aria-hidden="true"
               />
-              Saved · {wishlist.length}
+              {t.experiences.saved} · {wishlist.length}
             </p>
           )}
         </Reveal>
@@ -85,6 +97,7 @@ export default function Experiences({
           {EXPERIENCES.map((exp, i) => {
             const Icon = ICONS[exp.id] ?? Flower2;
             const saved = wishlist.includes(exp.id);
+            const tx = text(exp);
             return (
               <Reveal key={exp.id} delay={i * 120}>
                 <article className="group flex h-full flex-col border border-sand/60 bg-cream">
@@ -100,11 +113,7 @@ export default function Experiences({
                     <div className="absolute inset-0 bg-gradient-to-t from-stone/55 via-transparent to-transparent" />
                     <button
                       onClick={() => toggle(exp.id)}
-                      aria-label={
-                        saved
-                          ? `Remove ${exp.title} from wishlist`
-                          : `Save ${exp.title} to wishlist`
-                      }
+                      aria-label={`${saved ? "Remove" : "Save"} ${tx.title}`}
                       aria-pressed={saved}
                       className={`absolute right-3 top-3 p-2.5 backdrop-blur-sm transition-colors ${
                         saved
@@ -124,13 +133,13 @@ export default function Experiences({
                         aria-hidden="true"
                       />
                       <p className="text-[11px] font-semibold uppercase tracking-eyebrow text-cream">
-                        {exp.category}
+                        {tx.category}
                       </p>
                     </div>
                   </div>
                   <div className="flex flex-1 flex-col p-6">
                     <h3 className="font-display text-[22px] font-medium leading-snug text-stone">
-                      {exp.title}
+                      {tx.title}
                     </h3>
                     <p className="mt-2 flex items-center gap-1.5 text-[12px] font-medium text-sage">
                       <Clock
@@ -138,23 +147,23 @@ export default function Experiences({
                         strokeWidth={1.5}
                         aria-hidden="true"
                       />
-                      {exp.schedule}
+                      {tx.schedule}
                     </p>
                     <p className="mt-2.5 flex-1 text-[14px] font-light leading-relaxed text-stone/75">
-                      {exp.text}
+                      {tx.text}
                     </p>
                     <div className="mt-5 flex gap-3">
                       <button
                         onClick={() => setSelected(exp)}
                         className="flex-1 border border-bark px-4 py-2.5 text-[12px] font-semibold tracking-[0.05em] text-bark transition-colors hover:bg-bark hover:text-cream"
                       >
-                        View Program
+                        {t.experiences.viewProgram}
                       </button>
                       <button
                         onClick={onReserve}
                         className="flex-1 bg-bark px-4 py-2.5 text-[12px] font-semibold tracking-[0.05em] text-cream transition-colors hover:bg-terracotta"
                       >
-                        Reserve
+                        {t.experiences.reserve}
                       </button>
                     </div>
                   </div>
@@ -172,7 +181,7 @@ export default function Experiences({
           onClick={() => setSelected(null)}
           role="dialog"
           aria-modal="true"
-          aria-label={`${selected.title} program`}
+          aria-label={`${text(selected).title} ${t.experiences.programOf}`}
         >
           <div
             className="modal-panel max-h-[90svh] w-full max-w-2xl overflow-y-auto bg-cream"
@@ -190,24 +199,24 @@ export default function Experiences({
               <div className="absolute inset-0 bg-gradient-to-t from-stone/50 to-transparent" />
               <button
                 onClick={() => setSelected(null)}
-                aria-label="Close program"
+                aria-label={t.experiences.closeProgram}
                 className="absolute right-4 top-4 bg-stone/60 p-2 text-cream transition-colors hover:bg-stone"
               >
                 <X className="h-5 w-5" strokeWidth={1.5} />
               </button>
               <p className="absolute bottom-4 left-6 text-[11px] font-semibold uppercase tracking-eyebrow text-sand">
-                {selected.category} · {selected.schedule}
+                {text(selected).category} · {text(selected).schedule}
               </p>
             </div>
             <div className="p-6 md:p-8">
               <h3 className="font-display text-2xl font-medium text-stone md:text-3xl">
-                {selected.title}
+                {text(selected).title}
               </h3>
               <p className="mt-2 text-[14px] font-light leading-relaxed text-stone/80">
-                {selected.text}
+                {text(selected).text}
               </p>
               <ul className="mt-5 space-y-2.5">
-                {selected.program.map((p) => (
+                {text(selected).program.map((p) => (
                   <li
                     key={p}
                     className="flex items-start gap-2.5 text-[14px] text-stone"
@@ -234,7 +243,9 @@ export default function Experiences({
                     className={`h-4 w-4 ${wishlist.includes(selected.id) ? "fill-terracotta" : ""}`}
                     strokeWidth={1.5}
                   />
-                  {wishlist.includes(selected.id) ? "Saved" : "Save"}
+                  {wishlist.includes(selected.id)
+                    ? t.experiences.saved
+                    : t.experiences.save}
                 </button>
                 <button
                   onClick={() => {
@@ -243,7 +254,7 @@ export default function Experiences({
                   }}
                   className="flex-1 bg-bark py-3.5 text-[13px] font-semibold tracking-[0.05em] text-cream transition-colors hover:bg-terracotta"
                 >
-                  Reserve This Experience
+                  {t.experiences.reserveThis}
                 </button>
               </div>
             </div>

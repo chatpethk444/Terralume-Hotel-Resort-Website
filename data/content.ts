@@ -10,6 +10,14 @@ export type Room = {
   image: string;
   alt: string;
   features: string[];
+  th: {
+    tagline: string;
+    description: string;
+    bed: string;
+    view: string;
+    size: string;
+    features: string[];
+  };
 };
 
 export const ROOMS: Room[] = [
@@ -33,6 +41,22 @@ export const ROOMS: Room[] = [
       "Rain Shower",
       "Daily Housekeeping",
     ],
+    th: {
+      tagline: "ตื่นขึ้นเหนือผืนน้ำ",
+      description:
+        "กระจกบานใหญ่จากพื้นจรดเพดานเปิดสู่ระเบียงส่วนตัวเหนือทะเล ผนังหินขัดมือเก็บความเย็นและความเงียบ ยามเช้ามาพร้อมกลิ่นไอเค็มและแสงอ่อน เหมาะกับการตื่นช้าๆ และค่ำคืนที่ไม่เร่งรีบ",
+      bed: "เตียงคิง",
+      view: "วิวทะเล",
+      size: "35 ตร.ม.",
+      features: [
+        "เตียงคิง",
+        "วิวทะเล",
+        "35 ตร.ม.",
+        "ระเบียงส่วนตัว",
+        "ฝักบัวเรนชาวเวอร์",
+        "ทำความสะอาดรายวัน",
+      ],
+    },
   },
   {
     slug: "terrace-pool-suite",
@@ -54,6 +78,22 @@ export const ROOMS: Room[] = [
       "Rain Shower",
       "Evening Turndown",
     ],
+    th: {
+      tagline: "วันยาวนานบนระเบียงส่วนตัว",
+      description:
+        "สวีทห้องกว้างที่ใช้ชีวิตกลางแจ้งได้มากพอๆ กับในห้อง พักผ่อนบนระเบียงที่มีทะเลอยู่เบื้องหน้า รับประทานอาหารยามแสงทอง และหลับไปพร้อมเสียงน้ำ ห้องที่ถูกขอมากที่สุดสำหรับวันครบรอบ",
+      bed: "เตียงคิง",
+      view: "วิวทะเลพาโนรามา",
+      size: "48 ตร.ม.",
+      features: [
+        "เตียงคิง",
+        "ระเบียงวิวทะเล",
+        "48 ตร.ม.",
+        "มุมพักผ่อนกลางแจ้ง",
+        "ฝักบัวเรนชาวเวอร์",
+        "บริการเตรียมห้องยามค่ำ",
+      ],
+    },
   },
   {
     slug: "garden-pavilion",
@@ -75,6 +115,22 @@ export const ROOMS: Room[] = [
       "Rain Shower",
       "Daily Housekeeping",
     ],
+    th: {
+      tagline: "ความเขียวอันเงียบสงบ แสงอ่อนโยน",
+      description:
+        "ห้องศาลาซ่อนตัวในสวนมะกอก แลกเส้นขอบฟ้ากับความเขียวขจี เครื่องปั้นดินเผา ผ้าลินินสีเสจ และลานสำหรับอ่านหนังสือ แขกหลายท่านบอกว่าหลับสบายที่สุดในรีสอร์ท",
+      bed: "เตียงควีน",
+      view: "ลานสวน",
+      size: "32 ตร.ม.",
+      features: [
+        "เตียงควีน",
+        "ลานสวน",
+        "32 ตร.ม.",
+        "ต้นมะกอก",
+        "ฝักบัวเรนชาวเวอร์",
+        "ทำความสะอาดรายวัน",
+      ],
+    },
   },
 ];
 
@@ -87,6 +143,13 @@ export type Experience = {
   image: string;
   alt: string;
   program: string[];
+  th: {
+    category: string;
+    title: string;
+    text: string;
+    schedule: string;
+    program: string[];
+  };
 };
 
 export const EXPERIENCES: Experience[] = [
@@ -103,6 +166,17 @@ export const EXPERIENCES: Experience[] = [
       "Guided meditation by the water",
       "Herbal tea ritual to close",
     ],
+    th: {
+      category: "เวลเนส",
+      title: "โยคะรับอรุณและสมาธิ",
+      text: "ไหว้พระอาทิตย์เหนือผืนน้ำ แล้วนั่งนิ่งไปกับมัน เสื่อ ชา และความเงียบ เราจัดเตรียมไว้ให้",
+      schedule: "ทุกวัน 7:00 · ศาลา Terrace",
+      program: [
+        "โยคะรับอรุณ 60 นาที ทุกระดับ",
+        "สมาธิพร้อมผู้นำริมน้ำ",
+        "พิธีชาสมุนไพรปิดท้าย",
+      ],
+    },
   },
   {
     id: "culture",
@@ -117,6 +191,17 @@ export const EXPERIENCES: Experience[] = [
       "Menu built on the local catch",
       "Evening with local hosts",
     ],
+    th: {
+      category: "วัฒนธรรมท้องถิ่น",
+      title: "เส้นทางอาหารชายฝั่ง",
+      text: "วัตถุดิบสดจากทะเล ไวน์ท้องถิ่น และเรื่องเล่าจากเจ้าบ้านผู้เติบโตมาบนอ่าวนี้",
+      schedule: "ทุกค่ำ · ระเบียง Bay Terrace",
+      program: [
+        "อาหารค่ำใต้แสงเทียนเหนืออ่าว",
+        "เมนูจากวัตถุดิบท้องถิ่นประจำวัน",
+        "ค่ำคืนกับเจ้าบ้านท้องถิ่น",
+      ],
+    },
   },
   {
     id: "adventure",
@@ -131,6 +216,17 @@ export const EXPERIENCES: Experience[] = [
       "Swim stops in clear water",
       "Sunset return with light bites",
     ],
+    th: {
+      category: "ผจญภัย",
+      title: "ล่องเรือใบรอบเกาะ",
+      text: "เรือไม้ อ่าวลับ และไกด์ผู้อ่านทะเลออกเหมือนเรื่องราวของครอบครัว",
+      schedule: "ทุกวัน 9:00 และ 16:00 · อ่าวส่วนตัว",
+      program: [
+        "ล่องเรือครึ่งวันสู่อ่าวลับ",
+        "แวะว่ายน้ำในน้ำใส",
+        "กลับยามพระอาทิตย์ตกพร้อมของว่าง",
+      ],
+    },
   },
 ];
 
