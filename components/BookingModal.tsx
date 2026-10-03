@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { X, Minus, Plus, CheckCircle2 } from "lucide-react";
 import { ROOMS } from "../data/content";
 import { STR, type Lang } from "../data/i18n";
+import useScrollLock from "../hooks/useScrollLock";
 
 type Errors = Partial<
   Record<"checkIn" | "checkOut" | "name" | "email" | "phone", string>
@@ -48,14 +49,14 @@ export default function BookingModal({
       setRoom(initialRoom);
   }, [open, initialRoom]);
 
+  useScrollLock(open);
+
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     document.addEventListener("keydown", onKey);
-    document.body.style.overflow = "hidden";
     return () => {
       document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
     };
   }, [open, onClose]);
 
@@ -131,7 +132,7 @@ export default function BookingModal({
       aria-label={t.booking.quick}
     >
       <div
-        className="modal-panel max-h-[92svh] w-full max-w-lg overflow-y-auto bg-cream"
+        className="modal-panel max-h-[92svh] w-full max-w-lg overflow-y-auto overscroll-contain bg-cream"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between border-b border-sand/60 px-6 py-4">

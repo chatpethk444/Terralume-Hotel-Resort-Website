@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { BedDouble, Waves, Maximize, Trees, X } from "lucide-react";
 import { ROOMS, type Room } from "../data/content";
 import { STR, type Lang } from "../data/i18n";
 import Reveal from "./Reveal";
+import useScrollLock from "../hooks/useScrollLock";
 
 function ViewIcon({ room, className }: { room: Room; className?: string }) {
   const cls = className ?? "h-[18px] w-[18px] text-bark";
@@ -23,14 +24,7 @@ export default function Rooms({
 }) {
   const t = STR[lang];
   const [selected, setSelected] = useState<Room | null>(null);
-
-  // Lock background scroll while the detail modal is open
-  useEffect(() => {
-    document.body.style.overflow = selected ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [selected]);
+  useScrollLock(selected !== null);
 
   const text = (room: Room) => (lang === "th" ? room.th : room);
 
@@ -129,7 +123,7 @@ export default function Rooms({
           aria-label={`${selected.name} ${t.rooms.detailsOf}`}
         >
           <div
-            className="modal-panel max-h-[90svh] w-full max-w-2xl overflow-y-auto bg-cream"
+            className="modal-panel max-h-[90svh] w-full max-w-2xl overflow-y-auto overscroll-contain bg-cream"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="relative aspect-[16/8] w-full">

@@ -14,6 +14,7 @@ import {
 import { EXPERIENCES, WISHLIST_KEY, type Experience } from "../data/content";
 import { STR, type Lang } from "../data/i18n";
 import Reveal from "./Reveal";
+import useScrollLock from "../hooks/useScrollLock";
 
 const ICONS: Record<string, typeof Flower2> = {
   wellness: Flower2,
@@ -46,12 +47,7 @@ export default function Experiences({
   }, []);
 
   // Lock background scroll while the program modal is open
-  useEffect(() => {
-    document.body.style.overflow = selected ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [selected]);
+  useScrollLock(selected !== null);
 
   const text = (exp: Experience) => (lang === "th" ? exp.th : exp);
 
@@ -184,7 +180,7 @@ export default function Experiences({
           aria-label={`${text(selected).title} ${t.experiences.programOf}`}
         >
           <div
-            className="modal-panel max-h-[90svh] w-full max-w-2xl overflow-y-auto bg-cream"
+            className="modal-panel max-h-[90svh] w-full max-w-2xl overflow-y-auto overscroll-contain bg-cream"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="relative aspect-[16/8] w-full">

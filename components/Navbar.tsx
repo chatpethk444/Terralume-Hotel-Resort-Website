@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Menu, X, Mountain } from "lucide-react";
 import { STR, type Lang } from "../data/i18n";
+import useScrollLock from "../hooks/useScrollLock";
 
 export default function Navbar({
   onBook,
@@ -32,12 +33,7 @@ export default function Navbar({
   }, []);
 
   // Lock body scroll while drawer open
-  useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [open ]);
+  useScrollLock(open);
 
   const solid = scrolled || open;
 
@@ -148,7 +144,7 @@ export default function Navbar({
 
       {/* Mobile full-screen drawer — Flow C */}
       <div
-        className={`fixed inset-0 z-30 flex flex-col bg-cream transition-all duration-500 md:hidden ${
+        className={`fixed inset-0 z-30 flex flex-col overscroll-contain bg-cream transition-all duration-500 md:hidden ${
           open ? "visible opacity-100" : "invisible opacity-0"
         }`}
       >
