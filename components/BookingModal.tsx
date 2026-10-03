@@ -133,6 +133,7 @@ export default function BookingModal({
     >
       <div
         className="modal-panel max-h-[92svh] w-full max-w-lg overflow-y-auto overscroll-contain bg-cream"
+        data-scroll-panel
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between border-b border-sand/60 px-6 py-4">

@@ -181,6 +181,7 @@ export default function Experiences({
         >
           <div
             className="modal-panel max-h-[90svh] w-full max-w-2xl overflow-y-auto overscroll-contain bg-cream"
+            data-scroll-panel
             onClick={(e) => e.stopPropagation()}
           >
             <div className="relative aspect-[16/8] w-full">

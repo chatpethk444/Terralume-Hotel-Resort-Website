@@ -144,6 +144,7 @@ export default function Navbar({
 
       {/* Mobile full-screen drawer — Flow C */}
       <div
+        data-scroll-panel
         className={`fixed inset-0 z-30 flex flex-col overscroll-contain bg-cream transition-all duration-500 md:hidden ${
           open ? "visible opacity-100" : "invisible opacity-0"
         }`}
